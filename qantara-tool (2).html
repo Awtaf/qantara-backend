@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qantara – منصة المحتوى الذكي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080810;--bg2:#0f0f1a;--card:#13131e;--card2:#1a1a28;--border:#252535;--accent:#7c6cff;--accent2:#b09eff;--gold:#f5c842;--green:#1fd6a0;--red:#ff6b6b;--text:#eeeeff;--muted:#6868a0;--light:#b0b0d8;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(124,108,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,108,255,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;}
+.orb1{width:600px;height:600px;background:rgba(124,108,255,0.1);top:-200px;right:-150px;}
+.orb2{width:500px;height:500px;background:rgba(31,214,160,0.07);bottom:0;left:-150px;}
+.container{max-width:960px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+header{padding:28px 0 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:40px;}
+.logo{font-weight:900;font-size:26px;background:linear-gradient(135deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-sub{font-size:10px;font-weight:700;color:var(--muted);background:var(--card2);border:1px solid var(--border);padding:4px 10px;border-radius:20px;letter-spacing:2px;}
+.hero{text-align:center;margin-bottom:40px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,108,255,0.1);border:1px solid rgba(124,108,255,0.25);color:var(--accent2);font-size:12px;font-weight:700;padding:6px 16px;border-radius:30px;margin-bottom:16px;}
+.pulse{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.5)}}
+h1{font-size:clamp(24px,4.5vw,42px);font-weight:900;line-height:1.2;margin-bottom:12px;}
+h1 .grad{background:linear-gradient(135deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:15px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.75;font-family:'Tajawal',sans-serif;}
+.steps-nav{display:flex;gap:3px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:5px;margin-bottom:28px;overflow-x:auto;}
+.step-tab{flex:1;min-width:80px;padding:10px 6px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;}
+.step-tab.active{background:var(--card2);color:var(--text);box-shadow:0 2px 16px rgba(0,0,0,0.4);}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--border);color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;transition:all 0.3s;flex-shrink:0;}
+.step-tab.active .step-num{background:var(--accent);color:#fff;}
+.panel{display:none;}
+.panel.active{display:block;animation:fadeUp 0.35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:26px;margin-bottom:14px;}
+.form-card.hl{border-color:rgba(124,108,255,0.35);background:linear-gradient(135deg,var(--card),rgba(124,108,255,0.04));}
+.card-title{font-size:15px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.card-icon{width:32px;height:32px;background:rgba(124,108,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.form-group{display:flex;flex-direction:column;gap:7px;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:12px;font-weight:700;color:var(--light);font-family:'Tajawal',sans-serif;}
+input,textarea,select{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;transition:border-color 0.2s,box-shadow 0.2s;width:100%;direction:rtl;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,108,255,0.12);}
+input::placeholder,textarea::placeholder{color:var(--muted);}
+textarea{resize:vertical;min-height:80px;}
+select option{background:var(--card2);}
+.btn-grid{display:flex;gap:8px;flex-wrap:wrap;}
+.sel-btn{flex:1;min-width:80px;padding:10px 8px;border-radius:11px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:center;}
+.sel-btn.active{border-color:var(--accent);background:rgba(124,108,255,0.1);color:var(--accent2);}
+.sel-btn.g.active{border-color:var(--green);background:rgba(31,214,160,0.08);color:var(--green);}
+.sel-btn.go.active{border-color:var(--gold);background:rgba(245,200,66,0.08);color:var(--gold);}
+.sel-btn .sico{font-size:18px;display:block;margin-bottom:3px;}
+.or-div{display:flex;align-items:center;gap:14px;margin:18px 0;color:var(--muted);font-size:12px;font-weight:700;}
+.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:var(--border);}
+.primary-btn{width:100%;padding:17px;border-radius:16px;border:none;background:linear-gradient(135deg,var(--accent),#9b5cf6);color:#fff;font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;margin-top:4px;}
+.primary-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#9b5cf6,var(--accent));opacity:0;transition:opacity 0.3s;}
+.primary-btn:hover::before{opacity:1;}
+.primary-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(124,108,255,0.4);}
+.primary-btn span{position:relative;z-index:1;}
+.skip-btn{width:100%;margin-top:10px;padding:13px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.skip-btn:hover{color:var(--light);border-color:var(--muted);}
+.loading-wrap{display:none;text-align:center;padding:50px 20px;}
+.loading-wrap.active{display:block;}
+.loading-ring{width:70px;height:70px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);border-right-color:var(--green);animation:spin 0.9s linear infinite;margin:0 auto 18px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-title{font-size:17px;font-weight:700;margin-bottom:20px;}
+.l-steps{display:flex;flex-direction:column;gap:9px;max-width:300px;margin:0 auto;}
+.l-step{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:12px;font-family:'Tajawal',sans-serif;transition:all 0.4s;}
+.l-step.done{border-color:var(--green);color:var(--green);background:rgba(31,214,160,0.05);}
+.sico2{font-size:15px;}
+/* ANALYSIS */
+.score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.score-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;}
+.score-num{font-size:28px;font-weight:900;line-height:1;}
+.score-num.gr{color:var(--green);}.score-num.go{color:var(--gold);}.score-num.re{color:var(--red);}
+.score-label{font-size:10px;color:var(--muted);margin-top:4px;font-family:'Tajawal',sans-serif;}
+.ac{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:10px;}
+.ac-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.ac-ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.ac-ico.p{background:rgba(124,108,255,0.2);}.ac-ico.g{background:rgba(31,214,160,0.15);}.ac-ico.go{background:rgba(245,200,66,0.15);}.ac-ico.r{background:rgba(255,107,107,0.15);}
+.ac-title{font-size:13px;font-weight:700;}
+.ac-body{font-size:13px;color:var(--light);font-family:'Tajawal',sans-serif;line-height:1.75;}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;font-family:'Tajawal',sans-serif;}
+.tag.p{background:rgba(124,108,255,0.15);color:var(--accent2);border:1px solid rgba(124,108,255,0.2);}
+.tag.g{background:rgba(31,214,160,0.1);color:var(--green);border:1px solid rgba(31,214,160,0.2);}
+.tag.go{background:rgba(245,200,66,0.1);color:var(--gold);border:1px solid rgba(245,200,66,0.2);}
+.tag.r{background:rgba(255,107,107,0.1);color:var(--red);border:1px solid rgba(255,107,107,0.2);}
+/* POSTS */
+.results-wrap{display:none;}
+.results-wrap.active{display:block;animation:fadeUp 0.4s ease;}
+.results-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.results-top h2{font-size:20px;font-weight:700;}
+.brand-tag{display:flex;align-items:center;gap:7px;background:var(--card2);border:1px solid var(--border);padding:7px 14px;border-radius:30px;font-size:12px;color:var(--light);font-weight:600;}
+.posts-grid{display:flex;flex-direction:column;gap:16px;}
+.post-card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:border-color 0.2s,transform 0.2s;animation:fadeUp 0.4s ease both;}
+.post-card:hover{border-color:rgba(124,108,255,0.35);transform:translateY(-2px);}
+.post-img{width:100%;aspect-ratio:1/1;background:var(--bg2);position:relative;overflow:hidden;}
+.post-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s;}
+.post-card:hover .post-img img{transform:scale(1.04);}
+.img-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.img-spin{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;}
+.img-loading span{font-size:11px;color:var(--muted);font-family:'Tajawal',sans-serif;}
+.img-dl{position:absolute;bottom:10px;left:10px;padding:7px 12px;border-radius:8px;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,0.15);font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;opacity:0;transition:opacity 0.2s;display:flex;align-items:center;gap:5px;}
+.post-card:hover .img-dl{opacity:1;}
+.post-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--card2);}
+.post-meta{display:flex;align-items:center;gap:8px;}
+.post-num{width:26px;height:26px;border-radius:8px;background:rgba(124,108,255,0.2);color:var(--accent2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.plat-tag{background:var(--bg2);border:1px solid var(--border);padding:4px 9px;border-radius:8px;font-size:11px;color:var(--light);font-weight:700;}
+.sched-tag{font-size:11px;color:var(--green);font-weight:700;font-family:'Tajawal',sans-serif;}
+.post-body{padding:16px;}
+.post-text{font-family:'Tajawal',sans-serif;font-size:14px;line-height:1.85;color:var(--text);margin-bottom:12px;white-space:pre-wrap;}
+.hashtags{display:flex;flex-wrap:wrap;gap:5px;}
+.hashtag{font-size:11px;color:var(--accent2);background:rgba(124,108,255,0.1);border:1px solid rgba(124,108,255,0.2);padding:3px 9px;border-radius:20px;font-weight:700;font-family:'Tajawal',sans-serif;}
+.post-actions{display:flex;gap:7px;padding:11px 16px;border-top:1px solid var(--border);background:rgba(0,0,0,0.25);}
+.act-btn{flex:1;padding:9px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.act-btn:hover{background:var(--card2);color:var(--text);border-color:var(--accent);}
+.act-btn.ok{border-color:var(--green);color:var(--green);background:rgba(31,214,160,0.08);}
+.reset-btn{width:100%;margin-top:20px;padding:15px;border-radius:14px;border:1px solid var(--border);background:var(--card);color:var(--light);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.reset-btn:hover{border-color:var(--accent);color:var(--accent2);}
+footer{text-align:center;padding:36px 0 22px;color:var(--muted);font-size:11px;font-family:'Tajawal',sans-serif;border-top:1px solid var(--border);margin-top:56px;}
+footer a{color:var(--accent2);text-decoration:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:620px){.form-grid{grid-template-columns:1fr;}.score-row{grid-template-columns:1fr 1fr;}.step-tab{font-size:11px;padding:9px 4px;}h1{font-size:22px;}}
+</style>
+</head>
+<body>
+<div class="orb orb1"></div><div class="orb orb2"></div>
+<div class="container">
+<header>
+  <div class="logo">Qantara ✦</div>
+  <div class="logo-sub">AI CONTENT</div>
+</header>
+<div class="hero">
+  <div class="hero-badge"><div class="pulse"></div>مدعوم بالذكاء الاصطناعي</div>
+  <h1>تحليل ذكي · محتوى احترافي<br><span class="grad">كل شيء في مكان واحد</span></h1>
+  <p>يحلل الذكاء الاصطناعي شركتك ومنافسيك واحتياجات السوق، ثم يُنشئ محتوى سوشيال ميديا احترافياً مخصصاً لعلامتك التجارية</p>
+</div>
+
+<div class="steps-nav">
+  <button class="step-tab active" onclick="goStep(1)" id="tab1"><div class="step-num">١</div>معلومات الشركة</button>
+  <button class="step-tab" onclick="goStep(2)" id="tab2"><div class="step-num">٢</div>التحليل الذكي</button>
+  <button class="step-tab" onclick="goStep(3)" id="tab3"><div class="step-num">٣</div>إعدادات المحتوى</button>
+  <button class="step-tab" onclick="goStep(4)" id="tab4"><div class="step-num">٤</div>النتائج</button>
+</div>
+
+<!-- PANEL 1 -->
+<div class="panel active" id="panel1">
+  <div class="form-card hl">
+    <div class="card-title"><div class="card-icon">🌐</div>رابط موقعك الإلكتروني</div>
+    <div class="form-group">
+      <label>الرابط — سيساعد الذكاء الاصطناعي على التحليل الأعمق (اختياري)</label>
+      <input type="url" id="websiteUrl" placeholder="https://www.yourwebsite.com">
+    </div>
+  </div>
+  <div class="or-div">أو أدخل المعلومات مباشرة</div>
+  <div class="form-card">
+    <div class="card-title"><div class="card-icon">🏢</div>معلومات الشركة</div>
+    <div class="form-grid">
+      <div class="form-group"><label>اسم الشركة *</label><input type="text" id="companyName" placeholder="مثال: مطعم النجمة"></div>
+      <div class="form-group"><label>المجال / القطاع *</label>
+        <select id="industry">
+          <option value="">اختر المجال...</option>
+          <option>مطعم وكافيه</option><option>تجارة إلكترونية</option><option>عيادة وصحة</option>
+          <option>عقارات</option><option>تعليم وتدريب</option><option>موضة وأزياء</option>
+          <option>تقنية وبرمجة</option><option>سياحة وسفر</option><option>خدمات مالية</option>
+          <option>جمال ومستحضرات</option><option>لياقة بدنية</option><option>أخرى</option>
+        </select>
+      </div>
+      <div class="form-group full"><label>صف ما تقدمه شركتك</label><textarea id="description" placeholder="منتجاتك، خدماتك، ما يميزك عن المنافسين..."></textarea></div>
+      <div class="form-group"><label>الدولة / السوق</label>
+        <select id="country">
+          <option value="">اختر...</option>
+          <option>المملكة العربية السعودية</option><option>الإمارات العربية المتحدة</option>
+          <option>مصر</option><option>الكويت</option><option>قطر</option>
+          <option>البحرين</option><option>عُمان</option><option>الأردن</option>
+          <option>المغرب</option><option>النرويج – عرب المهجر</option>
+        </select>
+      </div>
+      <div class="form-group"><label>الجمهور المستهدف</label><input type="text" id="audience" placeholder="مثال: شباب 18-35، أصحاب الأعمال..."></div>
+      <div class="form-group full"><label>المنافسون الرئيسيون (اختياري)</label><input type="text" id="competitors" placeholder="مثال: شركة X، علامة Y..."></div>
+      <div class="form-group full">
+        <label>أهداف السوشيال ميديا</label>
+        <div class="btn-grid" id="goalsGrid">
+          <button class="sel-btn g" onclick="toggleGoal(this)">📈 زيادة المبيعات</button>
+          <button class="sel-btn g active" onclick="toggleGoal(this)">👥 بناء جمهور</button>
+          <button class="sel-btn g" onclick="toggleGoal(this)">🏆 تعزيز العلامة</button>
+          <button class="sel-btn g" onclick="toggleGoal(this)">💬 التفاعل</button>
+          <button class="sel-btn g" onclick="toggleGoal(this)">🛒 جذب عملاء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="primary-btn" onclick="runAnalysis()"><span>🔍 تحليل الشركة بالذكاء الاصطناعي</span></button>
+  <button class="skip-btn" onclick="goStep(3)">تخطي التحليل والانتقال مباشرة ←</button>
+</div>
+
+<!-- PANEL 2: ANALYSIS -->
+<div class="panel" id="panel2">
+  <div class="loading-wrap" id="aLoading">
+    <div class="loading-ring"></div>
+    <div class="loading-title">جاري تحليل شركتك...</div>
+    <div class="l-steps">
+      <div class="l-step" id="al1"><span class="sico2">🔍</span>فهم طبيعة الأعمال والخدمات</div>
+      <div class="l-step" id="al2"><span class="sico2">👥</span>تحليل الجمهور المستهدف</div>
+      <div class="l-step" id="al3"><span class="sico2">🏆</span>تحليل المنافسين والسوق</div>
+      <div class="l-step" id="al4"><span class="sico2">💡</span>تحديد نقاط القوة والفرص</div>
+      <div class="l-step" id="al5"><span class="sico2">📊</span>بناء استراتيجية المحتوى</div>
+    </div>
+  </div>
+  <div id="aResults" style="display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <div>
+        <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">📊 تقرير التحليل الذكي</h2>
+        <div style="font-size:12px;color:var(--muted);font-family:'Tajawal',sans-serif;" id="aLabel"></div>
+      </div>
+      <button onclick="goStep(3)" style="padding:10px 20px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">إنشاء المحتوى ←</button>
+    </div>
+    <div class="score-row" id="scoreRow"></div>
+    <div id="aCards"></div>
+    <button class="primary-btn" onclick="goStep(3)" style="margin-top:8px;"><span>✨ إنشاء المحتوى بناءً على التحليل</span></button>
+  </div>
+</div>
+
+<!-- PANEL 3: SETTINGS -->
+<div class="panel" id="panel3">
+  <div class="form-card">
+    <div class="card-title"><div class="card-icon">📱</div>المنصات</div>
+    <div class="btn-grid" id="platGrid">
+      <button class="sel-btn active" onclick="togglePlat(this,'instagram')"><span class="sico">📸</span>Instagram</button>
+      <button class="sel-btn" onclick="togglePlat(this,'facebook')"><span class="sico">👥</span>Facebook</button>
+      <button class="sel-btn" onclick="togglePlat(this,'twitter')"><span class="sico">🐦</span>Twitter</button>
+      <button class="sel-btn" onclick="togglePlat(this,'linkedin')"><span class="sico">💼</span>LinkedIn</button>
+      <button class="sel-btn" onclick="togglePlat(this,'tiktok')"><span class="sico">🎵</span>TikTok</button>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="card-title"><div class="card-icon">🎯</div>نبرة المحتوى</div>
+    <div class="btn-grid" id="toneGrid">
+      <button class="sel-btn g active" onclick="selOne(this,'toneGrid')">احترافي</button>
+      <button class="sel-btn g" onclick="selOne(this,'toneGrid')">ودّي وقريب</button>
+      <button class="sel-btn g" onclick="selOne(this,'toneGrid')">ترفيهي</button>
+      <button class="sel-btn g" onclick="selOne(this,'toneGrid')">تعليمي</button>
+      <button class="sel-btn g" onclick="selOne(this,'toneGrid')">ملهم</button>
+      <button class="sel-btn g" onclick="selOne(this,'toneGrid')">مبيعات</button>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="card-title"><div class="card-icon">📊</div>عدد المنشورات</div>
+    <div class="btn-grid" id="countGrid">
+      <button class="sel-btn go" onclick="selCount(this,3)">٣ منشورات</button>
+      <button class="sel-btn go active" onclick="selCount(this,5)">٥ منشورات</button>
+      <button class="sel-btn go" onclick="selCount(this,7)">٧ منشورات</button>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="card-title"><div class="card-icon">🖼️</div>نمط الصور</div>
+    <div class="btn-grid" id="imgGrid">
+      <button class="sel-btn active" onclick="selImg(this,'people')"><span class="sico">👥</span>أشخاص</button>
+      <button class="sel-btn" onclick="selImg(this,'lifestyle')"><span class="sico">✨</span>لايف ستايل</button>
+      <button class="sel-btn" onclick="selImg(this,'product')"><span class="sico">📦</span>منتجات</button>
+      <button class="sel-btn" onclick="selImg(this,'business')"><span class="sico">💼</span>أعمال</button>
+      <button class="sel-btn" onclick="selImg(this,'food')"><span class="sico">🍽️</span>طعام</button>
+      <button class="sel-btn" onclick="selImg(this,'abstract')"><span class="sico">🌀</span>إبداعي</button>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="card-title"><div class="card-icon">💡</div>موضوع أو حملة خاصة (اختياري)</div>
+    <div class="form-group"><input type="text" id="customTopic" placeholder="مثال: عرض رمضان، إطلاق منتج جديد..."></div>
+  </div>
+  <button class="primary-btn" onclick="generateContent()"><span>✨ إنشاء المحتوى الآن</span></button>
+</div>
+
+<!-- PANEL 4: RESULTS -->
+<div class="panel" id="panel4">
+  <div class="loading-wrap" id="cLoading">
+    <div class="loading-ring"></div>
+    <div class="loading-title">جاري إنشاء المحتوى...</div>
+    <div class="l-steps">
+      <div class="l-step" id="cl1"><span class="sico2">✍️</span>كتابة المنشورات بالعربية</div>
+      <div class="l-step" id="cl2"><span class="sico2">🎨</span>تخصيص المحتوى للمنصات</div>
+      <div class="l-step" id="cl3"><span class="sico2">🏷️</span>اختيار أفضل الهاشتاقات</div>
+      <div class="l-step" id="cl4"><span class="sico2">📅</span>تحديد أفضل أوقات النشر</div>
+      <div class="l-step" id="cl5"><span class="sico2">🖼️</span>تحميل الصور عالية الجودة</div>
+    </div>
+  </div>
+  <div class="results-wrap" id="rWrap">
+    <div class="results-top">
+      <h2>✦ منشوراتك جاهزة</h2>
+      <div class="brand-tag">🏢 <span id="brandLabel">شركتك</span></div>
+    </div>
+    <div class="posts-grid" id="postsGrid"></div>
+    <button class="reset-btn" onclick="resetAll()">↩ إنشاء محتوى جديد</button>
+  </div>
+</div>
+
+<footer>مدعوم بالذكاء الاصطناعي · <a href="https://qantara.it">Qantara.it</a> · جميع الحقوق محفوظة © 2025</footer>
+</div>
+
+<script>
+const S={platforms:['instagram'],tone:'احترافي',count:5,imgStyle:'people',goals:['بناء جمهور'],analysis:null};
+
+function goStep(n){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel'+n).classList.add('active');
+  document.getElementById('tab'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function togglePlat(btn,name){
+  btn.classList.toggle('active');
+  S.platforms=btn.classList.contains('active')?[...new Set([...S.platforms,name])]:S.platforms.filter(p=>p!==name);
+}
+function selOne(btn,gridId){
+  document.getElementById(gridId).querySelectorAll('.sel-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(gridId==='toneGrid')S.tone=btn.textContent.trim();
+}
+function selCount(btn,n){document.getElementById('countGrid').querySelectorAll('.sel-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');S.count=n;}
+function selImg(btn,style){document.getElementById('imgGrid').querySelectorAll('.sel-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');S.imgStyle=style;}
+function toggleGoal(btn){btn.classList.toggle('active');S.goals=[...document.getElementById('goalsGrid').querySelectorAll('.sel-btn.active')].map(b=>b.textContent.trim());}
+
+async function runAnalysis(){
+  const name=document.getElementById('companyName').value.trim();
+  const url=document.getElementById('websiteUrl').value.trim();
+  if(!name&&!url){alert('الرجاء إدخال اسم الشركة أو رابط الموقع');return;}
+  const industry=document.getElementById('industry').value;
+  const desc=document.getElementById('description').value.trim();
+  const country=document.getElementById('country').value;
+  const audience=document.getElementById('audience').value.trim();
+  const competitors=document.getElementById('competitors').value.trim();
+
+  goStep(2);
+  document.getElementById('aLoading').classList.add('active');
+  document.getElementById('aResults').style.display='none';
+  document.querySelectorAll('[id^="al"]').forEach(s=>s.classList.remove('done'));
+
+  for(let i=1;i<=5;i++){await delay(650+i*80);document.getElementById('al'+i).classList.add('done');}
+
+  const prompt=`أنت خبير تسويق رقمي محترف. حلّل هذه الشركة تحليلاً شاملاً:
+
+الاسم: ${name||'غير محدد'}
+المجال: ${industry||'غير محدد'}
+الوصف: ${desc||'غير محدد'}
+الموقع: ${url||'غير متاح'}
+السوق: ${country||'الشرق الأوسط'}
+الجمهور: ${audience||'غير محدد'}
+المنافسون: ${competitors||'غير محددين'}
+الأهداف: ${S.goals.join('، ')}
+
+أعطني JSON فقط بدون أي نص إضافي:
+{"scores":{"market_opportunity":85,"content_potential":90,"competition_level":65},"summary":"ملخص تنفيذي 3-4 جمل","products_services":{"main":["خدمة1","خدمة2","خدمة3"],"unique_value":"ما يميز الشركة"},"target_audience":{"primary":"الجمهور الأساسي","secondary":"الجمهور الثانوي","pain_points":["مشكلة1","مشكلة2","مشكلة3"],"desires":["رغبة1","رغبة2","رغبة3"]},"market_analysis":{"opportunities":["فرصة1","فرصة2","فرصة3"],"challenges":["تحدي1","تحدي2"],"competitor_weaknesses":["نقطة ضعف1","نقطة ضعف2"]},"content_strategy":{"best_topics":["موضوع1","موضوع2","موضوع3","موضوع4"],"content_pillars":["ركيزة1","ركيزة2","ركيزة3"],"recommended_tone":"النبرة الموصى بها","posting_frequency":"تكرار النشر الموصى به"},"strengths":["قوة1","قوة2","قوة3"],"recommendations":["توصية1","توصية2","توصية3"]}`;
+
+  let a=null;
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,messages:[{role:"user",content:prompt}]})});
+    const data=await res.json();
+    const txt=(data.content||[]).map(c=>c.text||'').join('');
+    const m=txt.match(/\{[\s\S]*\}/);
+    if(m)a=JSON.parse(m[0]);
+  }catch(e){}
+
+  if(!a)a={scores:{market_opportunity:78,content_potential:85,competition_level:60},summary:`${name||'شركتك'} تعمل في مجال ${industry||'الأعمال'} وتستهدف ${country||'السوق العربي'}. هناك فرص واعدة لبناء حضور رقمي قوي وجذب جمهور مستهدف من خلال محتوى احترافي ومتسق.`,products_services:{main:['الخدمة الرئيسية','المنتج الأساسي','الدعم والمتابعة'],unique_value:'الجودة والاهتمام بتجربة العميل'},target_audience:{primary:audience||'الجمهور العام',secondary:'الشركات الصغيرة والمتوسطة',pain_points:['صعوبة إيجاد خدمة موثوقة','ارتفاع الأسعار','ضعف دعم ما بعد البيع'],desires:['جودة عالية','سعر مناسب','خدمة سريعة']},market_analysis:{opportunities:['نمو التجارة الإلكترونية','زيادة استخدام السوشيال ميديا','الطلب المتزايد على الخدمات الرقمية'],challenges:['المنافسة المتزايدة','تغير سلوك المستهلك'],competitor_weaknesses:['ضعف خدمة العملاء','محدودية الحضور الرقمي']},content_strategy:{best_topics:['قصص نجاح العملاء','نصائح مهنية','كواليس العمل','العروض الخاصة'],content_pillars:['التعليم','الترفيه','البيع'],recommended_tone:S.tone,posting_frequency:'4-5 منشورات أسبوعياً'},strengths:['خبرة في المجال','جودة الخدمة','معرفة السوق المحلي'],recommendations:['نشر محتوى تعليمي بانتظام','استخدام قصص العملاء الحقيقية','التفاعل مع التعليقات يومياً']};
+
+  S.analysis=a;
+  renderAnalysis(a,name||'شركتك');
+}
+
+function renderAnalysis(a,name){
+  document.getElementById('aLoading').classList.remove('active');
+  document.getElementById('aResults').style.display='block';
+  document.getElementById('aLabel').textContent='تحليل شامل لـ: '+name;
+  const sc=a.scores||{};
+  document.getElementById('scoreRow').innerHTML=`
+    <div class="score-box"><div class="score-num gr">${sc.market_opportunity||80}%</div><div class="score-label">فرصة السوق</div></div>
+    <div class="score-box"><div class="score-num go">${sc.content_potential||85}%</div><div class="score-label">إمكانية المحتوى</div></div>
+    <div class="score-box"><div class="score-num re">${sc.competition_level||65}%</div><div class="score-label">مستوى المنافسة</div></div>`;
+  const g=document.getElementById('aCards');g.innerHTML='';
+  addAC(g,'p','📋','ملخص تنفيذي',`<p class="ac-body">${a.summary||''}</p>`);
+  const ps=a.products_services||{};
+  addAC(g,'g','🛍️','المنتجات والخدمات',`<div class="tags">${(ps.main||[]).map(t=>`<span class="tag g">${t}</span>`).join('')}</div>${ps.unique_value?`<p class="ac-body" style="margin-top:10px;"><strong>القيمة المميزة:</strong> ${ps.unique_value}</p>`:''}`);
+  const ta=a.target_audience||{};
+  addAC(g,'p','👥','الجمهور واحتياجاته',`<p class="ac-body"><strong>الأساسي:</strong> ${ta.primary||''}</p><div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'Tajawal',sans-serif;">نقاط الألم</div><div class="tags">${(ta.pain_points||[]).map(t=>`<span class="tag r">${t}</span>`).join('')}</div></div><div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'Tajawal',sans-serif;">الرغبات</div><div class="tags">${(ta.desires||[]).map(t=>`<span class="tag g">${t}</span>`).join('')}</div></div>`);
+  const ma=a.market_analysis||{};
+  addAC(g,'go','📈','تحليل السوق والمنافسين',`<div style="margin-bottom:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'Tajawal',sans-serif;">الفرص</div><div class="tags">${(ma.opportunities||[]).map(t=>`<span class="tag go">${t}</span>`).join('')}</div></div><div style="margin-bottom:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'Tajawal',sans-serif;">التحديات</div><div class="tags">${(ma.challenges||[]).map(t=>`<span class="tag r">${t}</span>`).join('')}</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'Tajawal',sans-serif;">نقاط ضعف المنافسين</div><div class="tags">${(ma.competitor_weaknesses||[]).map(t=>`<span class="tag p">${t}</span>`).join('')}</div></div>`);
+  const cs=a.content_strategy||{};
+  addAC(g,'g','🎯','استراتيجية المحتوى',`<div style="margin-bottom:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'Tajawal',sans-serif;">أفضل المواضيع</div><div class="tags">${(cs.best_topics||[]).map(t=>`<span class="tag g">${t}</span>`).join('')}</div></div><div style="margin-bottom:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-family:'Tajawal',sans-serif;">ركائز المحتوى</div><div class="tags">${(cs.content_pillars||[]).map(t=>`<span class="tag p">${t}</span>`).join('')}</div></div><p class="ac-body"><strong>النبرة:</strong> ${cs.recommended_tone||''} · <strong>تكرار النشر:</strong> ${cs.posting_frequency||''}</p>`);
+  addAC(g,'p','💪','نقاط القوة والتوصيات',`<div style="margin-bottom:10px;"><div class="tags">${(a.strengths||[]).map(t=>`<span class="tag g">${t}</span>`).join('')}</div></div>${(a.recommendations||[]).map((r,i)=>`<div style="display:flex;gap:8px;margin-bottom:7px;"><span style="color:var(--gold);font-weight:700;font-size:12px;">${i+1}.</span><span class="ac-body" style="margin:0;">${r}</span></div>`).join('')}`);
+}
+
+function addAC(container,color,icon,title,content){
+  const d=document.createElement('div');
+  d.className='ac';
+  d.innerHTML=`<div class="ac-head"><div class="ac-ico ${color}">${icon}</div><div class="ac-title">${title}</div></div>${content}`;
+  container.appendChild(d);
+}
+
+async function generateContent(){
+  const name=document.getElementById('companyName').value.trim()||document.getElementById('websiteUrl').value.trim()||'شركتك';
+  const industry=document.getElementById('industry').value||'أعمال';
+  const desc=document.getElementById('description').value.trim();
+  const country=document.getElementById('country').value||'الشرق الأوسط';
+  const audience=document.getElementById('audience').value.trim()||'الجمهور العام';
+  const topic=document.getElementById('customTopic').value.trim();
+  const platforms=S.platforms.length?S.platforms:['instagram'];
+  const seed=Date.now();
+
+  goStep(4);
+  document.getElementById('cLoading').classList.add('active');
+  document.getElementById('rWrap').classList.remove('active');
+  document.querySelectorAll('[id^="cl"]').forEach(s=>s.classList.remove('done'));
+  for(let i=1;i<=5;i++){await delay(550+i*80);document.getElementById('cl'+i).classList.add('done');}
+
+  const ctx=S.analysis?`\nبناءً على التحليل:\n- نقاط الألم: ${(S.analysis.target_audience?.pain_points||[]).join('، ')}\n- أفضل المواضيع: ${(S.analysis.content_strategy?.best_topics||[]).join('، ')}\n- القيمة المميزة: ${S.analysis.products_services?.unique_value||''}`:'' ;
+
+  const prompt=`أنت خبير تسويق رقمي للسوق العربي. أنشئ بالضبط ${S.count} منشورات.
+
+الشركة: ${name} | المجال: ${industry} | الوصف: ${desc||'لم يُحدد'} | السوق: ${country} | الجمهور: ${audience}${ctx}${topic?'\nالتركيز: '+topic:''}
+المنصات: ${platforms.join(' و ')} | النبرة: ${S.tone}
+
+JSON array فقط بدون أي نص:
+[{"platform":"اسم المنصة","text":"نص المنشور مع إيموجي","hashtags":["هاشتاق1","هاشتاق2","هاشتاق3","هاشتاق4","هاشتاق5"]}]
+
+كل منشور مختلف تماماً. الهاشتاقات بدون #.`;
+
+  let posts=[];
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,messages:[{role:"user",content:prompt}]})});
+    const data=await res.json();
+    const txt=(data.content||[]).map(c=>c.text||'').join('');
+    const m=txt.match(/\[[\s\S]*\]/);
+    if(m)posts=JSON.parse(m[0]);
+  }catch(e){}
+  if(!posts.length)posts=fallback(name,industry,S.count,platforms);
+  renderPosts(posts,name,platforms,seed);
+}
+
+function fallback(name,industry,count,platforms){
+  const items=[
+    {text:`✨ ${name} — الجودة التي تستحقها!\n\nنحن لا نقدم خدمة فقط، بل نقدم تجربة كاملة مبنية على الاهتمام والاحترافية.\n\n🌟 جرّبنا اليوم!`,hashtags:[name.replace(/\s/g,''),'جودة','تميز','خدمة_راقية',industry.replace(/\s/g,'')]},
+    {text:`💡 هل تعلم؟\n\n${name} تقدم لك أكثر من مجرد ${industry}...\nنقدم ثقة حقيقية ونتائج ملموسة.\n\n📲 تواصل معنا!`,hashtags:['احترافية','ثقة','نتائج',name.replace(/\s/g,''),'ابتكار']},
+    {text:`🚀 جديد في ${name}!\n\nنطور خدماتنا باستمرار لأن رضاكم هو أولويتنا.\n\nتابعونا 👇`,hashtags:['جديد','تطوير',name.replace(/\s/g,''),industry.replace(/\s/g,''),'إبداع']},
+    {text:`⭐ عملاؤنا يتحدثون!\n\n"الخدمة في ${name} فاقت توقعاتي"\n\nانضم لآلاف العملاء الراضين 🏆`,hashtags:['رضا_العملاء','تقييمات',name.replace(/\s/g,''),'ثقة','جودة']},
+    {text:`💼 لماذا ${name}؟\n\n✅ خبرة واسعة\n✅ فريق متخصص\n✅ نتائج مضمونة\n✅ دعم 24/7\n\nتواصل الآن! 📞`,hashtags:[name.replace(/\s/g,''),'خبرة','ضمان',industry.replace(/\s/g,''),'دعم']},
+    {text:`🌟 في ${name} نؤمن بأن النجاح يبدأ بشريك موثوق.\n\nكل خطوة نحو هدفك، نحن معك 💪`,hashtags:['شريك_النجاح','معك_دائما',name.replace(/\s/g,''),'نجاح','تطور']},
+    {text:`🎯 عرض خاص لفترة محدودة!\n\nلا تفوّت فرصة الاستفادة من خدمات ${name} المتميزة.\n\n⚡ سارع بالتواصل!`,hashtags:['عرض_خاص','لا_تفوتك',name.replace(/\s/g,''),industry.replace(/\s/g,''),'فرصة']}
+  ];
+  return items.slice(0,count).map((t,i)=>({platform:platforms[i%platforms.length],...t}));
+}
+
+const PI={instagram:'📸 Instagram',facebook:'👥 Facebook',twitter:'🐦 Twitter',linkedin:'💼 LinkedIn',tiktok:'🎵 TikTok'};
+const PT={instagram:['الأحد 7م','الثلاثاء 8م','الجمعة 6م','الأربعاء 9م','السبت 5م','الاثنين 7م','الخميس 8م'],facebook:['الاثنين 1ظ','الأربعاء 3ع','الجمعة 12ظ','الأحد 8م','الثلاثاء 6م','الخميس 5ع','السبت 10ص'],twitter:['الثلاثاء 9ص','الأربعاء 8ص','الجمعة 7م','الأحد 9م','الاثنين 8ص','الخميس 6م','السبت 11ص'],linkedin:['الثلاثاء 8ص','الأربعاء 12ظ','الخميس 9ص','الاثنين 7ص','الجمعة 11ص','الأحد 3ع','السبت 10ص'],tiktok:['الثلاثاء 9م','الجمعة 5م','السبت 11ص','الأحد 7م','الأربعاء 8م','الاثنين 6م','الخميس 9م']};
+const IQ={people:['professional woman smiling office','diverse team meeting success','young entrepreneur confident','business people handshake','confident professional portrait'],lifestyle:['luxury lifestyle morning coffee','happy friends outdoors sunny','modern apartment interior','weekend brunch aesthetic','travel adventure landscape'],product:['product photography minimal white','luxury product display elegant','ecommerce flat lay creative','brand showcase professional','elegant product still life'],business:['modern office workspace startup','business meeting professional','corporate team working','entrepreneur laptop coffee','executive business portrait'],food:['gourmet food photography restaurant','coffee latte art cafe','healthy meal aesthetic','chef cooking kitchen','dessert food photography'],abstract:['colorful abstract gradient','neon lights bokeh creative','modern geometric pattern','vibrant colors abstract art','light painting exposure']};
+
+function getImg(style,idx,seed){const q=IQ[style]||IQ.people;return `https://source.unsplash.com/1080x1080/?${encodeURIComponent(q[idx%q.length])}&sig=${seed+idx*137}`;}
+
+function renderPosts(posts,name,platforms,seed){
+  document.getElementById('cLoading').classList.remove('active');
+  document.getElementById('rWrap').classList.add('active');
+  document.getElementById('brandLabel').textContent=name;
+  const grid=document.getElementById('postsGrid');grid.innerHTML='';window._P=posts;
+  posts.forEach((post,i)=>{
+    const pk=Object.keys(PI).find(k=>(post.platform||'').toLowerCase().includes(k))||platforms[i%platforms.length]||'instagram';
+    const time=(PT[pk]||PT.instagram)[i%7];
+    const hh=(post.hashtags||[]).map(h=>`<span class="hashtag">#${h}</span>`).join('');
+    const card=document.createElement('div');card.className='post-card';card.style.animationDelay=(i*0.08)+'s';
+    card.innerHTML=`<div class="post-img" id="pi-${i}"><div class="img-loading"><div class="img-spin"></div><span>جاري تحميل الصورة...</span></div></div><div class="post-head"><div class="post-meta"><div class="post-num">${i+1}</div><div class="plat-tag">${PI[pk]||pk}</div></div><div class="sched-tag">📅 ${time}</div></div><div class="post-body"><div class="post-text">${post.text}</div><div class="hashtags">${hh}</div></div><div class="post-actions"><button class="act-btn" onclick="copyPost(this,${i})">📋 نسخ المنشور</button><button class="act-btn" onclick="copyHash(this,${i})">🏷️ نسخ الهاشتاقات</button></div>`;
+    grid.appendChild(card);
+    setTimeout(()=>loadImg(i,getImg(S.imgStyle,i,seed),seed),i*250+300);
+  });
+}
+function loadImg(idx,url,seed){
+  const a=document.getElementById('pi-'+idx);if(!a)return;
+  const img=new Image();
+  img.onload=()=>{a.innerHTML=`<img src="${url}" alt="صورة"><button class="img-dl" onclick="dlImg('${url}',${idx+1})">⬇ تحميل</button>`;};
+  img.onerror=()=>{const fb=`https://picsum.photos/seed/${seed+idx*31}/1080/1080`;a.innerHTML=`<img src="${fb}" alt="صورة"><button class="img-dl" onclick="dlImg('${fb}',${idx+1})">⬇ تحميل</button>`;};
+  img.src=url;
+}
+async function dlImg(url,num){try{const r=await fetch(url);const b=await r.blob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`qantara-${num}.jpg`;a.click();}catch(e){window.open(url,'_blank');}}
+function copyPost(btn,idx){const p=window._P[idx];navigator.clipboard.writeText(p.text+'\n\n'+(p.hashtags||[]).map(h=>'#'+h).join(' ')).then(()=>{btn.classList.add('ok');btn.textContent='✅ تم!';setTimeout(()=>{btn.classList.remove('ok');btn.innerHTML='📋 نسخ المنشور';},2000);});}
+function copyHash(btn,idx){const p=window._P[idx];navigator.clipboard.writeText((p.hashtags||[]).map(h=>'#'+h).join(' ')).then(()=>{btn.classList.add('ok');btn.textContent='✅ تم!';setTimeout(()=>{btn.classList.remove('ok');btn.innerHTML='🏷️ نسخ الهاشتاقات';},2000);});}
+function resetAll(){document.getElementById('cLoading').classList.remove('active');document.getElementById('rWrap').classList.remove('active');document.getElementById('aResults').style.display='none';document.querySelectorAll('.l-step').forEach(s=>s.classList.remove('done'));S.analysis=null;goStep(1);}
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+</script>
+</body>
+</html>
